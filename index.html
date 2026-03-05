@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Setup Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #07090d;
+  --bg2:       #0c0f16;
+  --surface:   #111520;
+  --surface2:  #171d2b;
+  --surface3:  #1e2536;
+  --border:    #252d3d;
+  --border2:   #2e3a52;
+  --accent:    #3b82f6;
+  --accent-lo: rgba(59,130,246,0.12);
+  --accent-glow: rgba(59,130,246,0.25);
+  --green:     #10d9a0;
+  --green-lo:  rgba(16,217,160,0.10);
+  --orange:    #f59e0b;
+  --orange-lo: rgba(245,158,11,0.10);
+  --red:       #f43f5e;
+  --text:      #e2e8f4;
+  --text-2:    #8b95aa;
+  --text-3:    #4e5769;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── background decorations ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59,130,246,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 90% 60%, rgba(16,217,160,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── layout ── */
+.page { position: relative; z-index: 1; }
+
+.wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section { padding: 60px 0; }
+section + section { padding-top: 0; }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-lo);
+  border: 1px solid rgba(59,130,246,0.25);
+  border-radius: 100px;
+  padding: 5px 14px;
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: blink 2s ease infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:1} 50%{opacity:.3}
+}
+
+.hero h1 {
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent) 0%, var(--green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text-2);
+  max-width: 520px;
+  margin-bottom: 36px;
+  font-weight: 400;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.pill .pill-icon { font-size: 15px; }
+.pill strong { color: var(--text); font-weight: 600; }
+
+/* ── VIDEO ── */
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  margin-bottom: 20px;
+}
+
+.video-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  position: relative;
+}
+
+.video-wrap iframe {
+  width: 100%; height: 100%;
+  border: none;
+  display: block;
+}
+
+.video-note {
+  font-size: 14px;
+  color: var(--text-2);
+  margin-top: 14px;
+  line-height: 1.6;
+}
+
+/* ── ARCHITECTURE ── */
+.arch-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+}
+
+.arch-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+
+.arch-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px 24px;
+  min-width: 110px;
+  transition: all .2s;
+}
+.arch-node:hover {
+  border-color: var(--accent);
+  background: var(--accent-lo);
+  transform: translateY(-2px);
+}
+.arch-icon { font-size: 24px; }
+.arch-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.arch-arrow {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--text-3);
+  padding: 0 8px;
+  align-self: center;
+}
+
+.arch-note {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-top: 20px;
+}
+.arch-note strong { color: var(--text); }
+
+/* ── PROGRESS TRACKER ── */
+.progress-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.progress-badge {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-lo);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 100px;
+  padding: 4px 12px;
+}
+
+.progress-bar-track {
+  height: 5px;
+  background: var(--surface3);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 5px;
+  transition: width .5s cubic-bezier(.34,1.56,.64,1);
+  width: 0%;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .checklist-grid { grid-template-columns: 1fr; }
+  .arch-flow { gap: 6px; }
+  .arch-arrow { display: none; }
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all .2s;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.checklist-item:hover {
+  border-color: var(--border2);
+  background: var(--surface3);
+}
+
+.checklist-item.done {
+  border-color: rgba(16,217,160,0.25);
+  background: var(--green-lo);
+  color: var(--text);
+}
+
+.c-box {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--text-3);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .2s;
+  font-size: 10px;
+  font-weight: 700;
+}
+.checklist-item.done .c-box {
+  background: var(--green);
+  border-color: var(--green);
+  color: #07090d;
+}
+
+/* ── STEPS ── */
+.steps-section { padding-top: 0; }
+
+.steps-header {
+  margin-bottom: 24px;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color .25s, box-shadow .25s;
+}
+.step-card:hover { border-color: var(--border2); }
+.step-card.open {
+  border-color: rgba(59,130,246,.4);
+  box-shadow: 0 0 24px rgba(59,130,246,.08);
+}
+.step-card.done {
+  border-color: rgba(16,217,160,.2);
+}
+
+.step-trigger {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s;
+}
+.step-trigger:hover { background: rgba(255,255,255,.015); }
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  transition: all .25s;
+}
+.step-card.open .step-num {
+  background: var(--accent-lo);
+  border-color: rgba(59,130,246,.35);
+  color: var(--accent);
+}
+.step-card.done .step-num {
+  background: var(--green-lo);
+  border-color: rgba(16,217,160,.3);
+  color: var(--green);
+}
+
+.step-title-wrap { flex: 1 1 0; }
+.step-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 2px;
+}
+.step-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.step-state {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  transition: all .25s;
+  flex-shrink: 0;
+}
+.step-card.open .step-state {
+  border-color: rgba(59,130,246,.3);
+  color: var(--accent);
+  background: var(--accent-lo);
+}
+.step-card.done .step-state {
+  border-color: rgba(16,217,160,.25);
+  color: var(--green);
+  background: var(--green-lo);
+}
+
+.step-chevron {
+  color: var(--text-3);
+  font-size: 18px;
+  transition: transform .3s, color .25s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.step-card.open .step-chevron {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+/* step body */
+.step-body {
+  display: none;
+  padding: 0 20px 22px;
+  border-top: 1px solid var(--border);
+}
+.step-card.open .step-body { display: block; }
+
+.step-goal {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--accent-lo);
+  border: 1px solid rgba(59,130,246,.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.step-goal::before {
+  content: '◎';
+  color: var(--accent);
+  flex-shrink: 0;
+  font-size: 13px;
+  margin-top: 1px;
+}
+
+.step-text {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.step-text:last-of-type { margin-bottom: 0; }
+.step-text strong { color: var(--text); font-weight: 600; }
+
+.step-list {
+  list-style: none;
+  margin: 10px 0;
+}
+.step-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-2);
+  padding: 4px 0;
+  line-height: 1.55;
+}
+.step-list li::before {
+  content: '→';
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* code block */
+.code-block {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.code-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: var(--surface3);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-lang {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+}
+.copy-btn:hover {
+  background: var(--accent-lo);
+  border-color: rgba(59,130,246,.3);
+  color: var(--accent);
+}
+.copy-btn.ok {
+  background: var(--green-lo);
+  border-color: rgba(16,217,160,.3);
+  color: var(--green);
+}
+
+code.blk {
+  display: block;
+  padding: 16px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #93c5fd;
+  line-height: 1.75;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+code.inline {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: #93c5fd;
+}
+
+/* example value */
+.example {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 10px 0;
+}
+.example-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+.example-val {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--green);
+}
+
+/* security note */
+.sec-note {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--orange-lo);
+  border: 1px solid rgba(245,158,11,.2);
+  border-left: 3px solid var(--orange);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.sec-icon { flex-shrink: 0; font-size: 15px; }
+.sec-note strong { color: var(--orange); font-weight: 600; }
+
+/* step divider */
+.step-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 18px 0;
+}
+
+/* step actions */
+.step-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid;
+}
+.btn:hover { transform: translateY(-1px); }
+
+.btn-done {
+  background: var(--green-lo);
+  border-color: rgba(16,217,160,.3);
+  color: var(--green);
+}
+.btn-done:hover {
+  background: rgba(16,217,160,.18);
+  border-color: rgba(16,217,160,.5);
+}
+.btn-done.undone {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-3);
+}
+.btn-next {
+  background: var(--accent-lo);
+  border-color: rgba(59,130,246,.3);
+  color: var(--accent);
+}
+.btn-next:hover {
+  background: rgba(59,130,246,.18);
+  border-color: rgba(59,130,246,.5);
+}
+
+/* security checklist (step 10) */
+.sec-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+.sec-check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: all .2s;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.sec-check-item:hover { border-color: var(--border2); background: var(--surface3); }
+.sec-check-item.checked {
+  border-color: rgba(16,217,160,.25);
+  background: var(--green-lo);
+  color: var(--text);
+}
+.sec-check-item .c-box { flex-shrink: 0; }
+
+/* ── FOOTER ── */
+.footer-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 0;
+}
+
+.footer-icon { font-size: 48px; margin-bottom: 20px; display: block; }
+
+.footer-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+
+.footer-sub {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.what-you-have {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.wh-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.wh-item .dot { color: var(--green); font-size: 16px; }
+
+.footer-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: .06em;
+}
+
+/* ── STICKY NAV ── */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,9,13,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.sticky-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sticky-brand {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+.sticky-brand span { color: var(--accent); }
+
+.sticky-progress {
+  flex: 1;
+  max-width: 200px;
+}
+.sticky-bar-track {
+  height: 3px;
+  background: var(--surface3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sticky-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 3px;
+  transition: width .5s cubic-bezier(.34,1.56,.64,1);
+  width: 0%;
+}
+.sticky-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-card {
+  animation: fadeUp .4s ease both;
+}
+.step-card:nth-child(1){animation-delay:.05s}
+.step-card:nth-child(2){animation-delay:.08s}
+.step-card:nth-child(3){animation-delay:.11s}
+.step-card:nth-child(4){animation-delay:.14s}
+.step-card:nth-child(5){animation-delay:.17s}
+.step-card:nth-child(6){animation-delay:.20s}
+.step-card:nth-child(7){animation-delay:.23s}
+.step-card:nth-child(8){animation-delay:.26s}
+.step-card:nth-child(9){animation-delay:.29s}
+.step-card:nth-child(10){animation-delay:.32s}
+.step-card:nth-child(11){animation-delay:.35s}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="page">
+
+<!-- ── STICKY NAV ── -->
+<nav class="sticky-nav">
+  <div class="sticky-inner">
+    <div class="sticky-brand">Open<span>Claw</span> Lab</div>
+    <div class="sticky-progress">
+      <div class="sticky-bar-track">
+        <div class="sticky-bar-fill" id="stickyFill"></div>
+      </div>
+      <div class="sticky-count" id="stickyCount">0 / 11 steps</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Setup Guide</div>
+    <h1>Open<em>Claw</em><br>Setup Lab</h1>
+    <p class="hero-sub">Разверните собственный OpenClaw-ассистент и подключите его к Telegram — шаг за шагом.</p>
+    <div class="hero-pills">
+      <div class="pill"><span class="pill-icon">⏱</span><strong>60–90 минут</strong></div>
+      <div class="pill"><span class="pill-icon">🎯</span><strong>Beginner</strong></div>
+      <div class="pill"><span class="pill-icon">🛠</span><strong>11 шагов</strong></div>
+      <div class="pill"><span class="pill-icon">🖥</span><strong>VPS + Telegram</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VIDEO ── -->
+<section>
+  <div class="wrap">
+    <div class="section-label">01 — Introduction</div>
+    <div class="section-title">Watch before you start</div>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <p class="video-note">This video explains the architecture of OpenClaw and why it should run on an isolated server.</p>
+  </div>
+</section>
+
+<!-- ── ARCHITECTURE ── -->
+<section>
+  <div class="wrap">
+    <div class="section-label">02 — Architecture</div>
+    <div class="section-title">How the system works</div>
+    <div class="arch-block">
+      <div class="arch-flow">
+        <div class="arch-node">
+          <div class="arch-icon">💬</div>
+          <div class="arch-label">Telegram</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-icon">🦾</div>
+          <div class="arch-label">OpenClaw</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-icon">🖥</div>
+          <div class="arch-label">VPS</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-icon">📁</div>
+          <div class="arch-label">Workspace</div>
+        </div>
+      </div>
+      <div class="arch-note">
+        <strong>Почему отдельный сервер:</strong> OpenClaw может выполнять команды и работать с файлами.
+        Запуск на личном компьютере даёт агенту доступ к вашим данным.
+        Отдельный VPS изолирует систему.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROGRESS TRACKER ── -->
+<section>
+  <div class="wrap">
+    <div class="section-label">03 — Progress</div>
+    <div class="section-title">Track your progress</div>
+    <div class="progress-section">
+      <div class="progress-header">
+        <div class="progress-title">Installation Checklist</div>
+        <div class="progress-badge" id="mainBadge">0 / 5</div>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="mainFill"></div>
+      </div>
+      <div class="checklist-grid">
+        <div class="checklist-item" data-progress="0" onclick="toggleProgress(0)">
+          <div class="c-box" id="pb-0"></div>
+          <span>Server created</span>
+        </div>
+        <div class="checklist-item" data-progress="1" onclick="toggleProgress(1)">
+          <div class="c-box" id="pb-1"></div>
+          <span>SSH configured</span>
+        </div>
+        <div class="checklist-item" data-progress="2" onclick="toggleProgress(2)">
+          <div class="c-box" id="pb-2"></div>
+          <span>OpenClaw installed</span>
+        </div>
+        <div class="checklist-item" data-progress="3" onclick="toggleProgress(3)">
+          <div class="c-box" id="pb-3"></div>
+          <span>Telegram connected</span>
+        </div>
+        <div class="checklist-item" data-progress="4" onclick="toggleProgress(4)">
+          <div class="c-box" id="pb-4"></div>
+          <span>Security configured</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SETUP STEPS ── -->
+<section class="steps-section">
+  <div class="wrap">
+    <div class="steps-header">
+      <div class="section-label">04 — Setup Steps</div>
+      <div class="section-title">Follow the guide</div>
+    </div>
+
+    <div class="steps-list">
+
+      <!-- Step 1 -->
+      <div class="step-card" data-step="1">
+        <div class="step-trigger" onclick="toggle(1)">
+          <div class="step-num" id="snum-1">01</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 1</div>
+            <div class="step-name">Create a server</div>
+          </div>
+          <span class="step-state" id="sstate-1">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Создать сервер, на котором будет работать OpenClaw.</div>
+          <ul class="step-list">
+            <li>Откройте DigitalOcean</li>
+            <li>Нажмите <strong>Create → Droplet</strong></li>
+            <li>Выберите <strong>Ubuntu 22.04</strong></li>
+            <li>Выберите минимальный тариф</li>
+          </ul>
+          <p class="step-text">После создания сервер покажет IP-адрес:</p>
+          <div class="example">
+            <div class="example-lbl">Пример IP</div>
+            <div class="example-val">134.209.xxx.xxx</div>
+          </div>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> OpenClaw запускается на отдельном сервере, чтобы изолировать его от вашего компьютера.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(1)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(1)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card" data-step="2">
+        <div class="step-trigger" onclick="toggle(2)">
+          <div class="step-num" id="snum-2">02</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 2</div>
+            <div class="step-name">Configure SSH access</div>
+          </div>
+          <span class="step-state" id="sstate-2">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Настроить безопасный доступ к серверу через SSH-ключ.</div>
+          <p class="step-text">Подключение по паролю небезопасно. Создайте SSH-ключ:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'ssh-keygen')">⎘ Copy command</button>
+            </div>
+            <code class="blk">ssh-keygen</code>
+          </div>
+          <p class="step-text">Добавьте публичный ключ в настройки сервера, затем подключитесь:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'ssh root@SERVER_IP')">⎘ Copy command</button>
+            </div>
+            <code class="blk">ssh root@SERVER_IP</code>
+          </div>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> SSH-ключи значительно безопаснее паролей и защищают от брутфорса.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(2)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(2)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card" data-step="3">
+        <div class="step-trigger" onclick="toggle(3)">
+          <div class="step-num" id="snum-3">03</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 3</div>
+            <div class="step-name">Update the server</div>
+          </div>
+          <span class="step-state" id="sstate-3">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Обновить систему для устранения известных уязвимостей.</div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'apt update\napt upgrade -y')">⎘ Copy command</button>
+            </div>
+            <code class="blk">apt update
+apt upgrade -y</code>
+          </div>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> Обновления закрывают известные уязвимости системы. Всегда обновляйте сервер перед установкой новых сервисов.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(3)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(3)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card" data-step="4">
+        <div class="step-trigger" onclick="toggle(4)">
+          <div class="step-num" id="snum-4">04</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 4</div>
+            <div class="step-name">Install dependencies</div>
+          </div>
+          <span class="step-state" id="sstate-4">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Установить Git и Docker.</div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'apt install git docker.io -y')">⎘ Copy command</button>
+            </div>
+            <code class="blk">apt install git docker.io -y</code>
+          </div>
+          <p class="step-text">Docker используется для запуска OpenClaw в контейнере.</p>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> Контейнеризация создаёт дополнительный уровень изоляции для сервиса.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(4)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(4)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card" data-step="5">
+        <div class="step-trigger" onclick="toggle(5)">
+          <div class="step-num" id="snum-5">05</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 5</div>
+            <div class="step-name">Create workspace</div>
+          </div>
+          <span class="step-state" id="sstate-5">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Создать директорию, где будет работать агент.</div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'mkdir /home/openclaw\nmkdir /home/openclaw/workspace\ncd /home/openclaw')">⎘ Copy command</button>
+            </div>
+            <code class="blk">mkdir /home/openclaw
+mkdir /home/openclaw/workspace
+cd /home/openclaw</code>
+          </div>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> Workspace ограничивает область доступа агента — он не может выйти за пределы этой директории.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(5)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(5)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-card" data-step="6">
+        <div class="step-trigger" onclick="toggle(6)">
+          <div class="step-num" id="snum-6">06</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 6</div>
+            <div class="step-name">Install OpenClaw</div>
+          </div>
+          <span class="step-state" id="sstate-6">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Скачать и запустить OpenClaw.</div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'git clone https://github.com/openclaw/openclaw\ncd openclaw')">⎘ Copy command</button>
+            </div>
+            <code class="blk">git clone https://github.com/openclaw/openclaw
+cd openclaw</code>
+          </div>
+          <p class="step-text">Запустите сервис:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copy(this,'docker compose up')">⎘ Copy command</button>
+            </div>
+            <code class="blk">docker compose up</code>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(6)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(6)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step-card" data-step="7">
+        <div class="step-trigger" onclick="toggle(7)">
+          <div class="step-num" id="snum-7">07</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 7</div>
+            <div class="step-name">Configure AI provider</div>
+          </div>
+          <span class="step-state" id="sstate-7">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Подключить языковую модель (OpenAI или Anthropic).</div>
+          <p class="step-text">Добавьте ваш API-ключ в конфигурацию:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">env</span>
+              <button class="copy-btn" onclick="copy(this,'OPENAI_API_KEY=your_key_here')">⎘ Copy command</button>
+            </div>
+            <code class="blk">OPENAI_API_KEY=your_key_here</code>
+          </div>
+          <div class="sec-note">
+            <span class="sec-icon">🔒</span>
+            <span><strong>Security note:</strong> API-ключи нельзя хранить прямо в коде. Используйте <code class="inline">.env</code>-файлы и не коммитьте их в репозиторий.</span>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(7)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(7)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="step-card" data-step="8">
+        <div class="step-trigger" onclick="toggle(8)">
+          <div class="step-num" id="snum-8">08</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 8</div>
+            <div class="step-name">Create Telegram bot</div>
+          </div>
+          <span class="step-state" id="sstate-8">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Создать бота через BotFather и получить токен.</div>
+          <ul class="step-list">
+            <li>Откройте Telegram</li>
+            <li>Найдите <strong>@BotFather</strong></li>
+            <li>Введите команду:</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">telegram</span>
+              <button class="copy-btn" onclick="copy(this,'/newbot')">⎘ Copy command</button>
+            </div>
+            <code class="blk">/newbot</code>
+          </div>
+          <ul class="step-list">
+            <li>BotFather запросит <strong>имя</strong> бота</li>
+            <li>Затем <strong>username</strong> бота</li>
+            <li>После этого вы получите токен</li>
+          </ul>
+          <div class="example">
+            <div class="example-lbl">Пример токена</div>
+            <div class="example-val">123456:ABCDEF...</div>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(8)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(8)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 9 -->
+      <div class="step-card" data-step="9">
+        <div class="step-trigger" onclick="toggle(9)">
+          <div class="step-num" id="snum-9">09</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 9</div>
+            <div class="step-name">Connect Telegram to OpenClaw</div>
+          </div>
+          <span class="step-state" id="sstate-9">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Добавить токен бота в конфигурацию OpenClaw.</div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">env</span>
+              <button class="copy-btn" onclick="copy(this,'TELEGRAM_BOT_TOKEN=your_token_here')">⎘ Copy command</button>
+            </div>
+            <code class="blk">TELEGRAM_BOT_TOKEN=your_token_here</code>
+          </div>
+          <p class="step-text">После этого отправьте боту тестовое сообщение:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">telegram</span>
+              <button class="copy-btn" onclick="copy(this,'hello')">⎘ Copy command</button>
+            </div>
+            <code class="blk">hello</code>
+          </div>
+          <p class="step-text">Если бот ответил — интеграция работает.</p>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(9)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(9)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 10 -->
+      <div class="step-card" data-step="10">
+        <div class="step-trigger" onclick="toggle(10)">
+          <div class="step-num" id="snum-10">10</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 10</div>
+            <div class="step-name">Security check</div>
+          </div>
+          <span class="step-state" id="sstate-10">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Проверить базовую безопасность перед использованием.</div>
+          <p class="step-text">Отметьте каждый пункт:</p>
+          <div class="sec-checklist">
+            <div class="sec-check-item" onclick="toggleSec(this)">
+              <div class="c-box"></div>
+              <span>OpenClaw работает на отдельном сервере</span>
+            </div>
+            <div class="sec-check-item" onclick="toggleSec(this)">
+              <div class="c-box"></div>
+              <span>Доступ к серверу только через SSH</span>
+            </div>
+            <div class="sec-check-item" onclick="toggleSec(this)">
+              <div class="c-box"></div>
+              <span>Агент работает внутри workspace</span>
+            </div>
+            <div class="sec-check-item" onclick="toggleSec(this)">
+              <div class="c-box"></div>
+              <span>API-ключи не лежат в коде</span>
+            </div>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(10)">✓ Шаг выполнен</button>
+            <button class="btn btn-next" onclick="openNext(10)">Next step →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 11 -->
+      <div class="step-card" data-step="11">
+        <div class="step-trigger" onclick="toggle(11)">
+          <div class="step-num" id="snum-11">11</div>
+          <div class="step-title-wrap">
+            <div class="step-tag">Step 11</div>
+            <div class="step-name">Test the assistant</div>
+          </div>
+          <span class="step-state" id="sstate-11">pending</span>
+          <span class="step-chevron">›</span>
+        </div>
+        <div class="step-body">
+          <div class="step-goal">Выполнить финальное тестирование через Telegram.</div>
+          <p class="step-text">Напишите боту в Telegram:</p>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">telegram</span>
+              <button class="copy-btn" onclick="copy(this,'hello')">⎘ Copy command</button>
+            </div>
+            <code class="blk">hello</code>
+          </div>
+          <div class="code-block">
+            <div class="code-top">
+              <span class="code-lang">telegram</span>
+              <button class="copy-btn" onclick="copy(this,'what is my schedule today')">⎘ Copy command</button>
+            </div>
+            <code class="blk">what is my schedule today</code>
+          </div>
+          <p class="step-text">Если бот отвечает — <strong>установка завершена!</strong></p>
+          <div class="step-actions">
+            <button class="btn btn-done" onclick="markDone(11)">✓ Завершить установку</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /steps-list -->
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<section>
+  <div class="wrap">
+    <div class="footer-block" id="footerBlock">
+      <span class="footer-icon">🎉</span>
+      <div class="footer-title">What you have now</div>
+      <p class="footer-sub">Вы успешно развернули собственный OpenClaw-инстанс.<br>Теперь вы можете добавлять интеграции и автоматизации.</p>
+      <div class="what-you-have">
+        <div class="wh-item"><span class="dot">◆</span> Working OpenClaw instance</div>
+        <div class="wh-item"><span class="dot">◆</span> Telegram interface</div>
+        <div class="wh-item"><span class="dot">◆</span> Isolated environment</div>
+      </div>
+      <div class="footer-note">openclaw.setup.lab — complete</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<script>
+  const TOTAL = 11;
+  const done = new Set();
+  let activeStep = null;
+
+  /* ── progress tracker ── */
+  const progressDone = new Set();
+  function toggleProgress(i) {
+    const el = document.querySelectorAll('.checklist-item')[i];
+    const box = document.getElementById(`pb-${i}`);
+    if (progressDone.has(i)) {
+      progressDone.delete(i);
+      el.classList.remove('done');
+      box.textContent = '';
+    } else {
+      progressDone.add(i);
+      el.classList.add('done');
+      box.textContent = '✓';
+    }
+    const pct = (progressDone.size / 5) * 100;
+    document.getElementById('mainFill').style.width = pct + '%';
+    document.getElementById('mainBadge').textContent = `${progressDone.size} / 5`;
+  }
+
+  /* ── accordion ── */
+  function toggle(n) {
+    const card = document.querySelector(`[data-step="${n}"]`);
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.step-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) {
+      card.classList.add('open');
+      activeStep = n;
+    } else {
+      activeStep = null;
+    }
+    refreshStates();
+  }
+
+  /* ── mark done ── */
+  function markDone(n) {
+    const card = document.querySelector(`[data-step="${n}"]`);
+    const btn = card.querySelector('.btn-done');
+    if (done.has(n)) {
+      done.delete(n);
+      card.classList.remove('done');
+      btn.textContent = '✓ Шаг выполнен';
+      btn.classList.remove('undone');
+    } else {
+      done.add(n);
+      card.classList.add('done');
+      btn.textContent = '↩ Отменить';
+      btn.classList.add('undone');
+    }
+    updateSticky();
+    refreshStates();
+  }
+
+  /* ── open next ── */
+  function openNext(n) {
+    if (n < TOTAL) {
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('open'));
+      const next = document.querySelector(`[data-step="${n+1}"]`);
+      next.classList.add('open');
+      activeStep = n + 1;
+      setTimeout(() => next.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    }
+    refreshStates();
+  }
+
+  /* ── sec checklist ── */
+  function toggleSec(el) {
+    el.classList.toggle('checked');
+    el.querySelector('.c-box').textContent = el.classList.contains('checked') ? '✓' : '';
+  }
+
+  /* ── copy ── */
+  function copy(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('ok');
+      setTimeout(() => {
+        btn.textContent = '⎘ Copy command';
+        btn.classList.remove('ok');
+      }, 2000);
+    });
+  }
+
+  /* ── state labels ── */
+  function refreshStates() {
+    for (let i = 1; i <= TOTAL; i++) {
+      const st = document.getElementById(`sstate-${i}`);
+      if (!st) continue;
+      st.className = 'step-state';
+      if (done.has(i)) {
+        st.textContent = 'done';
+        st.classList.add('step-state');
+        document.getElementById(`snum-${i}`).textContent = '✓';
+      } else if (i === activeStep) {
+        st.textContent = 'active';
+      } else {
+        st.textContent = 'pending';
+        document.getElementById(`snum-${i}`).textContent = String(i).padStart(2, '0');
+      }
+    }
+  }
+
+  /* ── sticky progress ── */
+  function updateSticky() {
+    const pct = (done.size / TOTAL) * 100;
+    document.getElementById('stickyFill').style.width = pct + '%';
+    document.getElementById('stickyCount').textContent = `${done.size} / ${TOTAL} steps`;
+  }
+
+  /* open step 1 by default */
+  toggle(1);
+</script>
+</body>
+</html>
