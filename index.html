@@ -693,6 +693,75 @@
         .completion-item .ci-icon { font-size: 24px; margin-bottom: 4px; }
         .completion-item .ci-text { font-size: 13px; font-weight: 600; color: var(--gray-700); }
 
+        /* ===== BOTTOM CTA ===== */
+        .bottom-cta-block {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            text-align: center;
+        }
+        .bottom-cta-block h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+        .bottom-cta-block p {
+            font-size: 15px;
+            color: var(--gray-500);
+            margin-bottom: 28px;
+        }
+        .bottom-cta-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-cta:hover { text-decoration: none; }
+        .btn-chat {
+            background: var(--blue-600);
+            color: var(--white);
+            border-color: var(--blue-600);
+        }
+        .btn-chat:hover {
+            background: var(--blue-700);
+            border-color: var(--blue-700);
+        }
+        .btn-chat svg { stroke: var(--white); }
+        .btn-support {
+            background: var(--white);
+            color: var(--gray-700);
+            border-color: var(--gray-200);
+        }
+        .btn-support:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+        .btn-pdf {
+            background: var(--white);
+            color: var(--gray-700);
+            border-color: var(--gray-200);
+        }
+        .btn-pdf:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
         /* Footer */
         .footer {
             padding: 32px 0;
@@ -700,6 +769,34 @@
             text-align: center;
             font-size: 13px;
             color: var(--gray-400);
+        }
+
+        /* ===== PRINT / PDF STYLES ===== */
+        @media print {
+            body { background: white; }
+            .floating-bar,
+            .btn-primary,
+            .cmd-copy,
+            .btn-cta,
+            .bottom-cta-block,
+            #bottomCta,
+            .video-wrap,
+            footer,
+            .confetti { display: none !important; }
+            .section { padding: 24px 0; break-inside: avoid; }
+            .step-body { max-height: none !important; overflow: visible !important; }
+            .sec-body { max-height: none !important; overflow: visible !important; }
+            .trouble-body { max-height: none !important; overflow: visible !important; }
+            .step-card { break-inside: avoid; }
+            .hero { padding: 32px 0; }
+            .hero h1 { font-size: 28px; }
+            .container { max-width: 100%; padding: 0 16px; }
+            .progress-wrap { border: 1px solid #ccc; }
+            .checklist { border: 1px solid #ccc; }
+            .screenshot { border: 1px dashed #ccc; }
+            a { color: var(--blue-600); text-decoration: underline; }
+            a::after { content: " (" attr(href) ")"; font-size: 11px; color: #888; word-break: break-all; }
+            .step-arrow { display: none; }
         }
 
         /* Confetti */
@@ -1406,6 +1503,30 @@
     </div>
 </section>
 
+<!-- ============ BOTTOM CTA ============ -->
+<section class="section" id="bottomCta">
+    <div class="container">
+        <div class="bottom-cta-block">
+            <h2>Нужна помощь?</h2>
+            <p>Присоединяйтесь к сообществу или напишите в поддержку — мы поможем разобраться.</p>
+            <div class="bottom-cta-buttons">
+                <a href="https://t.me/gconf_chat" target="_blank" class="btn-cta btn-chat">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Общий чат потока
+                </a>
+                <a href="https://t.me/gconf_support" target="_blank" class="btn-cta btn-support">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Поддержка
+                </a>
+                <button class="btn-cta btn-pdf" onclick="downloadPDF()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+                    Скачать гайд в PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Footer -->
 <footer class="footer">
     <div class="container">gconf · OpenClaw Setup Lab</div>
@@ -1538,6 +1659,20 @@
                 setTimeout(() => c.remove(), 5000);
             }, i * 30);
         }
+    }
+
+    // ===== DOWNLOAD PDF =====
+    function downloadPDF() {
+        // Expand all accordion sections before printing
+        document.querySelectorAll('.step-body').forEach(el => el.classList.add('open'));
+        document.querySelectorAll('.sec-body').forEach(el => el.classList.add('open'));
+        document.querySelectorAll('.trouble-body').forEach(el => el.classList.add('open'));
+        document.querySelectorAll('.step-arrow').forEach(el => el.classList.add('open'));
+
+        // Small delay to let styles apply
+        setTimeout(() => {
+            window.print();
+        }, 300);
     }
 
     // ===== INIT =====
