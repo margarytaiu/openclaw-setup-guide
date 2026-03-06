@@ -4,236 +4,705 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenClaw Setup — Интерактивный гайд</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        code, .mono { font-family: 'JetBrains Mono', monospace; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --bg-card-hover: #1c1c28;
-            --border: #2a2a3a;
-            --accent: #6c5ce7;
-            --accent-light: #a29bfe;
-            --accent-glow: rgba(108, 92, 231, 0.3);
-            --green: #00cec9;
-            --green-glow: rgba(0, 206, 201, 0.3);
-            --orange: #fdcb6e;
-            --red: #e17055;
-            --text-primary: #e8e8f0;
-            --text-secondary: #8888a0;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            --amber-50: #fffbeb;
+            --amber-100: #fef3c7;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --red-50: #fef2f2;
+            --red-100: #fee2e2;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --radius: 8px;
+            --radius-lg: 12px;
         }
 
         body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-800);
+            background: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .hero-gradient {
-            background: radial-gradient(ellipse at 50% 0%, rgba(108,92,231,0.15) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 50%, rgba(0,206,201,0.08) 0%, transparent 50%);
+        code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.875em; }
+
+        a { color: var(--blue-600); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 64px 0; }
+        .section + .section { border-top: 1px solid var(--gray-200); }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 80px 0 64px;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .hero-tag {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-500);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            padding: 6px 16px;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+        }
+        .hero h1 span { color: var(--blue-600); }
+        .hero-sub {
+            font-size: 18px;
+            color: var(--gray-500);
+            margin-bottom: 32px;
         }
 
-        .glow-border {
-            border: 1px solid var(--border);
-            box-shadow: 0 0 20px rgba(108,92,231,0.05);
-            transition: all 0.3s ease;
+        .hero-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 32px;
         }
-        .glow-border:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 30px var(--accent-glow);
+        .hero-card p { color: var(--gray-600); margin-bottom: 16px; }
+        .hero-card ul { list-style: none; }
+        .hero-card li {
+            color: var(--gray-600);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        .progress-bar-bg {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-        }
-        .progress-bar-fill {
-            background: linear-gradient(90deg, var(--accent), var(--green));
-            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .accordion-content.open {
-            max-height: 5000px;
-        }
-
-        .accordion-header {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .accordion-header:hover {
-            background: var(--bg-card-hover) !important;
-        }
-
-        .accordion-arrow {
-            transition: transform 0.3s ease;
-        }
-        .accordion-arrow.rotated {
-            transform: rotate(180deg);
-        }
-
-        .copy-btn {
-            transition: all 0.2s ease;
-        }
-        .copy-btn:hover {
-            background: var(--accent) !important;
-            color: white !important;
-        }
-        .copy-btn.copied {
-            background: var(--green) !important;
-            color: white !important;
-        }
-
-        .check-item {
-            transition: all 0.3s ease;
-        }
-        .check-item.checked {
-            opacity: 0.6;
-        }
-        .check-item.checked .check-text {
-            text-decoration: line-through;
-            color: var(--text-secondary);
-        }
-
-        .custom-checkbox {
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
+        .hero-card li::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: var(--green-50);
+            color: var(--green-600);
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
             flex-shrink: 0;
         }
-        .custom-checkbox:checked {
-            background: var(--accent);
-            border-color: var(--accent);
+
+        .meta-badges {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
         }
-        .custom-checkbox:checked::after {
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+        .badge-label { font-size: 12px; color: var(--gray-400); }
+        .badge-value { font-weight: 600; color: var(--gray-800); }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--blue-600);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 16px;
+            padding: 14px 32px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: var(--blue-700); }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            margin-bottom: 32px;
+        }
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+        .section-header p {
+            color: var(--gray-500);
+            font-size: 15px;
+        }
+
+        /* ===== VIDEO ===== */
+        .video-wrap {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 20px;
+        }
+        .video-wrap .ratio {
+            position: relative;
+            padding-top: 56.25%;
+        }
+        .video-wrap iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+        .info-list li {
+            padding: 6px 0;
+            color: var(--gray-600);
+            font-size: 15px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .info-list li::before {
+            content: '•';
+            color: var(--blue-500);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ===== DIAGRAM ===== */
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 32px 0;
+        }
+        .diagram-box {
+            width: 200px;
+            text-align: center;
+            padding: 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+        }
+        .diagram-box .icon { font-size: 22px; margin-bottom: 4px; }
+        .diagram-box .label { font-weight: 600; font-size: 14px; color: var(--gray-800); }
+        .diagram-arrow {
+            font-size: 20px;
+            color: var(--gray-300);
+            line-height: 1;
+            padding: 4px 0;
+        }
+
+        .note-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+        .note-box p { color: var(--gray-600); font-size: 15px; margin-bottom: 8px; }
+        .note-box p:last-child { margin-bottom: 0; }
+        .note-box ul { list-style: none; margin-top: 8px; }
+        .note-box li {
+            padding: 3px 0;
+            color: var(--gray-600);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .note-box li::before {
+            content: '–';
+            color: var(--gray-400);
+            flex-shrink: 0;
+        }
+
+        /* ===== PREREQUISITES ===== */
+        .prereq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 520px) { .prereq-grid { grid-template-columns: 1fr; } }
+        .prereq-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .prereq-icon { font-size: 24px; flex-shrink: 0; }
+        .prereq-item strong { display: block; font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .prereq-item span, .prereq-item a { font-size: 13px; color: var(--gray-500); }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-wrap {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-label { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+        .progress-pct { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--blue-600); }
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--blue-600);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* ===== FLOATING PROGRESS ===== */
+        .floating-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 10px 24px;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .floating-bar.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .floating-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .floating-inner .progress-track { flex: 1; height: 6px; }
+
+        /* ===== CHECKLIST ===== */
+        .checklist {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+        .checklist h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            user-select: none;
+        }
+        .check-item:hover { background: var(--gray-50); }
+        .check-item input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-300);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.15s;
+        }
+        .check-item input[type="checkbox"]:checked {
+            background: var(--blue-600);
+            border-color: var(--blue-600);
+        }
+        .check-item input[type="checkbox"]:checked::after {
             content: '✓';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .check-text {
             font-size: 14px;
-            font-weight: bold;
+            color: var(--gray-700);
+            transition: all 0.15s;
+        }
+        .check-item.done .check-text {
+            text-decoration: line-through;
+            color: var(--gray-400);
         }
 
-        .cmd-block {
-            background: #0d0d14;
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-        }
+        /* ===== ACCORDION STEPS ===== */
+        .steps-list { display: flex; flex-direction: column; gap: 12px; }
 
-        .security-block {
-            background: rgba(253, 203, 110, 0.05);
-            border: 1px solid rgba(253, 203, 110, 0.2);
-            border-left: 3px solid var(--orange);
+        .step-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: box-shadow 0.2s;
         }
+        .step-card:hover { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .step-card.completed { border-left: 3px solid var(--green-500); }
 
-        .verify-block {
-            background: rgba(0, 206, 201, 0.05);
-            border: 1px solid rgba(0, 206, 201, 0.2);
-            border-left: 3px solid var(--green);
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
         }
+        .step-header:hover { background: var(--gray-50); }
 
-        .diagram-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-        .diagram-box:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-2px);
-        }
-
-        .diagram-arrow {
-            color: var(--accent);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #5a4bd1);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
-        }
-
-        .tag {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-        }
-
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-        }
-
-        .floating-progress {
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .troubleshoot-block {
-            background: rgba(225, 112, 85, 0.05);
-            border: 1px solid rgba(225, 112, 85, 0.2);
-            border-left: 3px solid var(--red);
-        }
-
-        .completion-block {
-            background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(0,206,201,0.1));
-            border: 1px solid var(--accent);
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-in {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
-            50% { box-shadow: 0 0 40px var(--accent-glow); }
-        }
-
-        .step-number {
-            background: linear-gradient(135deg, var(--accent), #5a4bd1);
-            min-width: 36px;
-            height: 36px;
+        .step-num {
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            background: var(--blue-50);
+            color: var(--blue-600);
             font-weight: 700;
             font-size: 14px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .step-card.completed .step-num {
+            background: var(--green-50);
+            color: var(--green-600);
         }
 
-        .step-completed .step-number {
-            background: linear-gradient(135deg, var(--green), #00b3ad) !important;
+        .step-info { flex: 1; }
+        .step-title { font-size: 15px; font-weight: 600; color: var(--gray-800); }
+        .step-subtitle { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+
+        .step-arrow {
+            width: 20px;
+            height: 20px;
+            color: var(--gray-400);
+            transition: transform 0.25s;
+            flex-shrink: 0;
+        }
+        .step-arrow.open { transform: rotate(180deg); }
+
+        .step-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .step-body.open { max-height: 3000px; }
+
+        .step-content {
+            padding: 0 20px 24px 20px;
+            border-top: 1px solid var(--gray-100);
         }
 
-        html { scroll-behavior: smooth; }
+        /* Step sub-blocks */
+        .sub-block { margin-top: 20px; }
+        .sub-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sub-label.goal { color: var(--gray-500); }
+        .sub-label.actions { color: var(--gray-500); }
+        .sub-label.commands { color: var(--gray-500); }
+        .sub-label.security { color: var(--amber-600); }
+        .sub-label.verify { color: var(--green-600); }
 
+        .sub-text { font-size: 15px; color: var(--gray-600); }
+
+        /* Ordered action list */
+        .action-list {
+            list-style: none;
+            counter-reset: action;
+        }
+        .action-list li {
+            counter-increment: action;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 15px;
+            color: var(--gray-600);
+        }
+        .action-list li::before {
+            content: counter(action);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Command block */
+        .cmd {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-top: 6px;
+        }
+        .cmd code {
+            color: var(--gray-800);
+            font-size: 13px;
+            word-break: break-all;
+        }
+        .cmd-copy {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .cmd-copy:hover { border-color: var(--blue-500); color: var(--blue-600); }
+        .cmd-copy.copied { background: var(--green-50); border-color: var(--green-500); color: var(--green-600); }
+
+        /* Highlight blocks */
+        .block-security {
+            background: var(--amber-50);
+            border: 1px solid var(--amber-100);
+            border-left: 3px solid var(--amber-500);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-top: 16px;
+        }
+        .block-security p { font-size: 14px; color: var(--gray-600); }
+
+        .block-verify {
+            background: var(--green-50);
+            border: 1px solid var(--green-100);
+            border-left: 3px solid var(--green-500);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-top: 16px;
+        }
+        .block-verify p { font-size: 14px; color: var(--gray-600); }
+
+        .block-trouble {
+            background: var(--red-50);
+            border: 1px solid var(--red-100);
+            border-left: 3px solid var(--red-500);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+        }
+        .block-trouble p { font-size: 14px; color: var(--gray-600); }
+
+        /* Screenshot placeholder */
+        .screenshot {
+            border: 1px dashed var(--gray-300);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        .screenshot .icon { font-size: 28px; margin-bottom: 4px; }
+
+        /* ===== SECURITY SECTION ===== */
+        .sec-cards { display: flex; flex-direction: column; gap: 10px; }
+        .sec-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .sec-header:hover { background: var(--gray-50); }
+        .sec-icon { font-size: 20px; }
+        .sec-name { flex: 1; font-size: 15px; font-weight: 600; color: var(--gray-800); }
+        .sec-desc { font-size: 13px; color: var(--gray-400); }
+        .sec-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .sec-body.open { max-height: 1000px; }
+        .sec-body-inner {
+            padding: 0 18px 18px;
+            border-top: 1px solid var(--gray-100);
+            padding-top: 14px;
+        }
+        .sec-body-inner p { font-size: 14px; color: var(--gray-600); }
+
+        /* ===== TROUBLESHOOT ===== */
+        .trouble-list { display: flex; flex-direction: column; gap: 10px; }
+        .trouble-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .trouble-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .trouble-header:hover { background: var(--gray-50); }
+        .trouble-title { flex: 1; font-size: 15px; font-weight: 600; color: var(--gray-800); }
+        .trouble-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .trouble-body.open { max-height: 500px; }
+        .trouble-body-inner { padding: 0 18px 18px; border-top: 1px solid var(--gray-100); padding-top: 14px; }
+
+        /* ===== FINAL ===== */
+        .final-test {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-align: center;
+        }
+        .final-test p { color: var(--gray-600); font-size: 15px; }
+        .final-cmd {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 12px 20px;
+            margin: 16px 0;
+        }
+        .final-cmd code { font-size: 18px; font-weight: 600; color: var(--gray-900); }
+
+        .completion {
+            background: var(--green-50);
+            border: 1px solid var(--green-100);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+        }
+        .completion h2 { font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+        .completion p { color: var(--gray-600); font-size: 15px; }
+        .completion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+        @media (max-width: 520px) { .completion-grid { grid-template-columns: 1fr; } }
+        .completion-item {
+            background: var(--white);
+            border: 1px solid var(--green-100);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+        .completion-item .ci-icon { font-size: 24px; margin-bottom: 4px; }
+        .completion-item .ci-text { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+
+        /* Footer */
+        .footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--gray-200);
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        /* Confetti */
         .confetti {
             position: fixed;
             pointer-events: none;
@@ -244,1020 +713,841 @@
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
+
+        html { scroll-behavior: smooth; }
+
+        .inline-code {
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--gray-700);
+        }
+
+        .simple-list {
+            list-style: none;
+        }
+        .simple-list li {
+            font-size: 14px;
+            color: var(--gray-600);
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 520px) {
+            .hero h1 { font-size: 28px; }
+            .section { padding: 40px 0; }
+            .meta-badges { flex-direction: column; }
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <!-- Floating Progress Bar -->
-    <div id="floatingProgress" class="floating-progress fixed top-0 left-0 right-0 z-50 transform -translate-y-full opacity-0">
-        <div class="max-w-5xl mx-auto px-6 py-3 flex items-center gap-4">
-            <span class="text-sm font-medium text-[var(--text-secondary)]">Прогресс:</span>
-            <div class="flex-1 progress-bar-bg rounded-full h-2.5">
-                <div id="floatingProgressFill" class="progress-bar-fill h-full rounded-full" style="width: 0%"></div>
+<!-- FLOATING PROGRESS -->
+<div class="floating-bar" id="floatingBar">
+    <div class="floating-inner">
+        <span class="progress-label">Прогресс</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="floatingFill" style="width:0%"></div>
+        </div>
+        <span class="progress-pct" id="floatingPct">0%</span>
+    </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <div class="container" style="text-align:center">
+        <div class="hero-tag">gconf · Практический модуль</div>
+
+        <h1><span>OpenClaw</span> Setup</h1>
+        <p class="hero-sub">Разверните собственного AI-ассистента и подключите его к Telegram.</p>
+
+        <div class="hero-card" style="text-align:left">
+            <p>В этом практическом гайде вы развернёте <strong>OpenClaw</strong> — систему AI-агента, которая может выполнять команды, работать с сервисами и автоматизировать задачи.</p>
+            <p style="margin-bottom:8px;">После выполнения инструкции у вас будет:</p>
+            <ul>
+                <li>Работающий OpenClaw-инстанс</li>
+                <li>Telegram-интерфейс управления</li>
+                <li>Изолированная инфраструктура</li>
+                <li>Базовая защита системы</li>
+            </ul>
+        </div>
+
+        <div class="meta-badges" style="justify-content:center">
+            <div class="badge">
+                <span style="font-size:20px">⏱</span>
+                <div style="text-align:left">
+                    <div class="badge-label">Время выполнения</div>
+                    <div class="badge-value">~60–90 минут</div>
+                </div>
             </div>
-            <span id="floatingProgressText" class="text-sm font-bold mono text-[var(--accent-light)]">0%</span>
+            <div class="badge">
+                <span style="font-size:20px">🧠</span>
+                <div style="text-align:left">
+                    <div class="badge-label">Уровень</div>
+                    <div class="badge-value" style="color:var(--green-600)">Beginner</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="document.getElementById('lab').scrollIntoView({behavior:'smooth'})">
+            Начать установку →
+        </button>
+    </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Перед началом</h2>
+            <p>Перед тем как начать установку, посмотрите короткое объяснение.</p>
+        </div>
+
+        <div class="video-wrap">
+            <div class="ratio">
+                <iframe
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=x7j3WwoEC58ikskn"
+                    title="OpenClaw Introduction"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <p style="font-weight:600;color:var(--gray-700)">В этом видео разбирается:</p>
+            <ul class="info-list">
+                <li>Что такое OpenClaw</li>
+                <li>Как работает AI-агент</li>
+                <li>Почему важно запускать агента на отдельном сервере</li>
+                <li>Какие существуют риски безопасности (prompt injection)</li>
+            </ul>
         </div>
     </div>
+</section>
 
-    <!-- HERO SECTION -->
-    <section class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
-        <div class="max-w-5xl mx-auto px-6 py-20 w-full">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 tag rounded-full px-4 py-2 text-sm mb-8">
-                    <span class="text-[var(--accent-light)]">🔧</span>
-                    <span class="text-[var(--text-secondary)]">gconf · Практический модуль</span>
-                </div>
-
-                <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tight">
-                    <span class="bg-gradient-to-r from-[var(--accent-light)] to-[var(--green)] bg-clip-text text-transparent">OpenClaw</span>
-                    <span class="text-[var(--text-primary)]"> Setup</span>
-                </h1>
-
-                <p class="text-xl md:text-2xl text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto leading-relaxed">
-                    Разверните собственного AI-ассистента и подключите его к Telegram.
-                </p>
-
-                <div class="max-w-2xl mx-auto text-left bg-[var(--bg-card)] glow-border rounded-2xl p-6 mb-10">
-                    <p class="text-[var(--text-secondary)] mb-4 leading-relaxed">
-                        В этом практическом гайде вы развернёте <strong class="text-[var(--text-primary)]">OpenClaw</strong> — систему AI-агента, которая может выполнять команды, работать с сервисами и автоматизировать задачи.
-                    </p>
-                    <p class="text-[var(--text-secondary)] mb-3">После выполнения инструкции у вас будет:</p>
-                    <ul class="space-y-2">
-                        <li class="flex items-center gap-3 text-[var(--text-secondary)]">
-                            <span class="text-[var(--green)]">✦</span> работающий OpenClaw-инстанс
-                        </li>
-                        <li class="flex items-center gap-3 text-[var(--text-secondary)]">
-                            <span class="text-[var(--green)]">✦</span> Telegram-интерфейс управления
-                        </li>
-                        <li class="flex items-center gap-3 text-[var(--text-secondary)]">
-                            <span class="text-[var(--green)]">✦</span> изолированная инфраструктура
-                        </li>
-                        <li class="flex items-center gap-3 text-[var(--text-secondary)]">
-                            <span class="text-[var(--green)]">✦</span> базовая защита системы
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="flex flex-wrap justify-center gap-4 mb-10">
-                    <div class="tag rounded-xl px-5 py-3 flex items-center gap-3">
-                        <span class="text-2xl">⏱</span>
-                        <div class="text-left">
-                            <div class="text-xs text-[var(--text-secondary)]">Время выполнения</div>
-                            <div class="font-semibold">~60–90 минут</div>
-                        </div>
-                    </div>
-                    <div class="tag rounded-xl px-5 py-3 flex items-center gap-3">
-                        <span class="text-2xl">🧠</span>
-                        <div class="text-left">
-                            <div class="text-xs text-[var(--text-secondary)]">Уровень</div>
-                            <div class="font-semibold text-[var(--green)]">Beginner</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="document.getElementById('lab').scrollIntoView({behavior:'smooth'})" class="btn-primary text-white font-bold px-10 py-4 rounded-xl text-lg cursor-pointer">
-                    🚀 Начать установку
-                </button>
-            </div>
+<!-- ============ ARCHITECTURE ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Архитектура системы</h2>
         </div>
-    </section>
 
-    <!-- VIDEO SECTION -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">📺 Перед началом</h2>
-                <p class="text-[var(--text-secondary)] max-w-xl mx-auto">Перед тем как начать установку, посмотрите короткое объяснение.</p>
-            </div>
-
-            <div class="glow-border rounded-2xl overflow-hidden mb-8">
-                <div class="relative w-full" style="padding-top:56.25%">
-                    <iframe
-                        class="absolute inset-0 w-full h-full"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=x7j3WwoEC58ikskn"
-                        title="OpenClaw Introduction"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-
-            <div class="bg-[var(--bg-card)] glow-border rounded-2xl p-6">
-                <p class="text-[var(--text-secondary)] mb-3">В этом видео разбирается:</p>
-                <ul class="space-y-2 text-[var(--text-secondary)]">
-                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">•</span> что такое OpenClaw</li>
-                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">•</span> как работает AI-агент</li>
-                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">•</span> почему важно запускать агента на отдельном сервере</li>
-                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">•</span> какие существуют риски безопасности (prompt injection)</li>
-                </ul>
-            </div>
+        <div class="diagram">
+            <div class="diagram-box"><div class="icon">💬</div><div class="label">Telegram</div></div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-box"><div class="icon">🤖</div><div class="label">OpenClaw Agent</div></div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-box"><div class="icon">🖥</div><div class="label">VPS Server</div></div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-box"><div class="icon">📁</div><div class="label">Workspace</div></div>
         </div>
-    </section>
 
-    <div class="section-divider max-w-4xl mx-auto"></div>
-
-    <!-- ARCHITECTURE -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">🏗 Архитектура системы</h2>
-            </div>
-
-            <div class="flex flex-col items-center gap-0 mb-10">
-                <div class="diagram-box rounded-xl px-8 py-4 text-center w-56">
-                    <div class="text-2xl mb-1">💬</div>
-                    <div class="font-bold">Telegram</div>
-                </div>
-                <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                <div class="diagram-box rounded-xl px-8 py-4 text-center w-56">
-                    <div class="text-2xl mb-1">🤖</div>
-                    <div class="font-bold">OpenClaw Agent</div>
-                </div>
-                <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                <div class="diagram-box rounded-xl px-8 py-4 text-center w-56">
-                    <div class="text-2xl mb-1">🖥</div>
-                    <div class="font-bold">VPS Server</div>
-                </div>
-                <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                <div class="diagram-box rounded-xl px-8 py-4 text-center w-56">
-                    <div class="text-2xl mb-1">📁</div>
-                    <div class="font-bold">Workspace</div>
-                </div>
-            </div>
-
-            <div class="bg-[var(--bg-card)] glow-border rounded-2xl p-6 space-y-3 text-[var(--text-secondary)]">
-                <p>Вы будете отправлять команды боту в <strong class="text-[var(--text-primary)]">Telegram</strong>.</p>
-                <p><strong class="text-[var(--text-primary)]">OpenClaw</strong> будет выполнять их на сервере.</p>
-                <p>Чтобы защитить систему, агент работает:</p>
-                <ul class="space-y-2 ml-4">
-                    <li class="flex items-start gap-3"><span class="text-[var(--green)]">✦</span> на отдельном сервере</li>
-                    <li class="flex items-start gap-3"><span class="text-[var(--green)]">✦</span> внутри sandbox</li>
-                    <li class="flex items-start gap-3"><span class="text-[var(--green)]">✦</span> с ограниченным доступом к файлам</li>
-                </ul>
-            </div>
+        <div class="note-box">
+            <p>Вы будете отправлять команды боту в <strong>Telegram</strong>.</p>
+            <p><strong>OpenClaw</strong> будет выполнять их на сервере.</p>
+            <p>Чтобы защитить систему, агент работает:</p>
+            <ul>
+                <li>На отдельном сервере</li>
+                <li>Внутри sandbox</li>
+                <li>С ограниченным доступом к файлам</li>
+            </ul>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div class="section-divider max-w-4xl mx-auto"></div>
+<!-- ============ PREREQUISITES ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Что понадобится</h2>
+        </div>
 
-    <!-- PREREQUISITES -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center">🧰 Что понадобится</h2>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="bg-[var(--bg-card)] glow-border rounded-xl p-5 flex items-start gap-4">
-                    <span class="text-3xl">🌊</span>
-                    <div>
-                        <div class="font-semibold mb-1">Аккаунт DigitalOcean</div>
-                        <a href="https://cloud.digitalocean.com" target="_blank" class="text-[var(--accent-light)] text-sm hover:underline mono">cloud.digitalocean.com</a>
-                    </div>
+        <div class="prereq-grid">
+            <div class="prereq-item">
+                <div class="prereq-icon">🌊</div>
+                <div>
+                    <strong>Аккаунт DigitalOcean</strong>
+                    <a href="https://cloud.digitalocean.com" target="_blank">cloud.digitalocean.com</a>
                 </div>
-                <div class="bg-[var(--bg-card)] glow-border rounded-xl p-5 flex items-start gap-4">
-                    <span class="text-3xl">💬</span>
-                    <div>
-                        <div class="font-semibold mb-1">Telegram</div>
-                        <span class="text-[var(--text-secondary)] text-sm">Для управления ботом</span>
-                    </div>
+            </div>
+            <div class="prereq-item">
+                <div class="prereq-icon">💬</div>
+                <div>
+                    <strong>Telegram</strong>
+                    <span>Для управления ботом</span>
                 </div>
-                <div class="bg-[var(--bg-card)] glow-border rounded-xl p-5 flex items-start gap-4">
-                    <span class="text-3xl">🖥</span>
-                    <div>
-                        <div class="font-semibold mb-1">Терминал</div>
-                        <span class="text-[var(--text-secondary)] text-sm">Terminal / CMD / PowerShell</span>
-                    </div>
+            </div>
+            <div class="prereq-item">
+                <div class="prereq-icon">🖥</div>
+                <div>
+                    <strong>Терминал</strong>
+                    <span>Terminal / CMD / PowerShell</span>
                 </div>
-                <div class="bg-[var(--bg-card)] glow-border rounded-xl p-5 flex items-start gap-4">
-                    <span class="text-3xl">⏰</span>
-                    <div>
-                        <div class="font-semibold mb-1">~1 час времени</div>
-                        <span class="text-[var(--text-secondary)] text-sm">Без спешки</span>
-                    </div>
+            </div>
+            <div class="prereq-item">
+                <div class="prereq-icon">⏰</div>
+                <div>
+                    <strong>~1 час времени</strong>
+                    <span>Без спешки</span>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div class="section-divider max-w-4xl mx-auto"></div>
+<!-- ============ LAB ============ -->
+<section class="section" id="lab">
+    <div class="container">
+        <div class="section-header">
+            <h2>Лаборатория установки</h2>
+            <p>Следуйте шагам ниже и отмечайте их по мере выполнения.</p>
+        </div>
 
-    <!-- INTERACTIVE LAB -->
-    <section id="lab" class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">🔬 Лаборатория установки</h2>
-                <p class="text-[var(--text-secondary)] max-w-xl mx-auto">Следуйте шагам ниже и отмечайте их по мере выполнения.</p>
+        <!-- PROGRESS -->
+        <div class="progress-wrap">
+            <div class="progress-top">
+                <span class="progress-label">Прогресс установки</span>
+                <span class="progress-pct" id="mainPct">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="mainFill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="checklist" id="checklist">
+            <h3>Чеклист</h3>
+            <label class="check-item" data-i="0"><input type="checkbox" onchange="updateProgress()"><span class="check-text">Сервер создан</span></label>
+            <label class="check-item" data-i="1"><input type="checkbox" onchange="updateProgress()"><span class="check-text">SSH доступ настроен</span></label>
+            <label class="check-item" data-i="2"><input type="checkbox" onchange="updateProgress()"><span class="check-text">OpenClaw установлен</span></label>
+            <label class="check-item" data-i="3"><input type="checkbox" onchange="updateProgress()"><span class="check-text">Telegram бот создан</span></label>
+            <label class="check-item" data-i="4"><input type="checkbox" onchange="updateProgress()"><span class="check-text">Sandbox включён</span></label>
+            <label class="check-item" data-i="5"><input type="checkbox" onchange="updateProgress()"><span class="check-text">Секреты защищены</span></label>
+            <label class="check-item" data-i="6"><input type="checkbox" onchange="updateProgress()"><span class="check-text">Установка завершена</span></label>
+        </div>
+
+        <!-- STEPS -->
+        <div class="steps-list" id="stepsList">
+
+            <!-- STEP 1 -->
+            <div class="step-card" data-step="1">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">1</div>
+                    <div class="step-info">
+                        <div class="step-title">Создать сервер</div>
+                        <div class="step-subtitle">Создайте удалённый сервер для OpenClaw</div>
+                    </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Создать удалённый сервер для OpenClaw.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label actions">⚙️ Действия</div>
+                            <ol class="action-list">
+                                <li>Перейдите: <a href="https://cloud.digitalocean.com" target="_blank">cloud.digitalocean.com</a></li>
+                                <li>Нажмите: <code class="inline-code">Create → Droplet</code></li>
+                                <li>Выберите: <code class="inline-code">Ubuntu 22.04</code></li>
+                                <li>Выберите тариф: <code class="inline-code">Basic → $6/month</code></li>
+                                <li>Нажмите: <code class="inline-code">Create Droplet</code></li>
+                            </ol>
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>Вы получите IP-адрес. Пример:</p>
+                            <div class="cmd" style="margin-top:8px">
+                                <code>134.209.xxx.xxx</code>
+                            </div>
+                        </div>
+                        <div class="screenshot">
+                            <div class="icon">📸</div>
+                            Страница создания Droplet
+                        </div>
+                        <div class="block-security">
+                            <div class="sub-label security">🔒 Безопасность</div>
+                            <p>OpenClaw запускается на отдельном сервере, чтобы изолировать систему.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- PROGRESS BAR -->
-            <div class="bg-[var(--bg-card)] glow-border rounded-2xl p-6 mb-8">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="font-semibold">Прогресс установки</span>
-                    <span id="progressPercent" class="mono font-bold text-[var(--accent-light)]">0%</span>
+            <!-- STEP 2 -->
+            <div class="step-card" data-step="2">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">2</div>
+                    <div class="step-info">
+                        <div class="step-title">Настроить SSH</div>
+                        <div class="step-subtitle">Подключитесь к серверу безопасным способом</div>
+                    </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
-                <div class="progress-bar-bg rounded-full h-4">
-                    <div id="progressFill" class="progress-bar-fill h-full rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- CHECKLIST -->
-            <div class="bg-[var(--bg-card)] glow-border rounded-2xl p-6 mb-10">
-                <h3 class="font-bold text-lg mb-4">📋 Чеклист</h3>
-                <div class="space-y-3" id="checklist">
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="0">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">Сервер создан</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="1">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">SSH доступ настроен</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="2">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">OpenClaw установлен</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="3">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">Telegram бот создан</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="4">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">Sandbox включён</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="5">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">Секреты защищены</span>
-                    </label>
-                    <label class="check-item flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[var(--bg-card-hover)]" data-index="6">
-                        <input type="checkbox" class="custom-checkbox" onchange="updateProgress()">
-                        <span class="check-text">Установка завершена</span>
-                    </label>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Подключиться к серверу безопасным способом.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label commands">💻 Команды</div>
+                            <div class="cmd"><code>ssh-keygen</code><button class="cmd-copy" onclick="copyCmd(this,'ssh-keygen')">Copy</button></div>
+                            <div class="cmd"><code>cat ~/.ssh/id_rsa.pub</code><button class="cmd-copy" onclick="copyCmd(this,'cat ~/.ssh/id_rsa.pub')">Copy</button></div>
+                            <div class="cmd"><code>ssh root@SERVER_IP</code><button class="cmd-copy" onclick="copyCmd(this,'ssh root@SERVER_IP')">Copy</button></div>
+                        </div>
+                        <div class="screenshot">
+                            <div class="icon">📸</div>
+                            Пример подключения
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>Вы увидите приветствие: <code class="inline-code">Welcome to Ubuntu 22.04</code></p>
+                        </div>
+                        <div class="block-security">
+                            <div class="sub-label security">🔒 Безопасность</div>
+                            <p>SSH-ключ защищает сервер от атак на пароль.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- STEPS -->
-            <div class="space-y-4" id="stepsContainer">
-
-                <!-- STEP 1 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="1">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">1</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Создать сервер</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Создайте удалённый сервер для OpenClaw</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- STEP 3 -->
+            <div class="step-card" data-step="3">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">3</div>
+                    <div class="step-info">
+                        <div class="step-title">Обновить систему</div>
+                        <div class="step-subtitle">Установите последние обновления безопасности</div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <!-- Goal -->
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Создать удалённый сервер для OpenClaw.</p>
-                            </div>
-
-                            <!-- Actions -->
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>⚙️</span> Действия</div>
-                                <ol class="space-y-3 text-[var(--text-secondary)]">
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">1</span>
-                                        <span>Перейдите: <a href="https://cloud.digitalocean.com" target="_blank" class="text-[var(--accent-light)] hover:underline mono">cloud.digitalocean.com</a></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">2</span>
-                                        <span>Нажмите: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">Create → Droplet</code></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">3</span>
-                                        <span>Выберите: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">Ubuntu 22.04</code></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">4</span>
-                                        <span>Выберите тариф: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">Basic → $6/month</code></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">5</span>
-                                        <span>Нажмите: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">Create Droplet</code></span>
-                                    </li>
-                                </ol>
-                            </div>
-
-                            <!-- Result -->
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">Вы получите IP-адрес. Пример:</p>
-                                <div class="cmd-block rounded-lg p-3 mt-2 flex items-center justify-between">
-                                    <code class="text-sm text-[var(--accent-light)]">134.209.xxx.xxx</code>
-                                </div>
-                            </div>
-
-                            <!-- Screenshot placeholder -->
-                            <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border)] rounded-xl p-8 text-center">
-                                <span class="text-4xl">📸</span>
-                                <p class="text-sm text-[var(--text-secondary)] mt-2">Страница создания Droplet</p>
-                            </div>
-
-                            <!-- Security -->
-                            <div class="security-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--orange)]"><span>🔒</span> Безопасность</div>
-                                <p class="text-[var(--text-secondary)]">OpenClaw запускается на отдельном сервере, чтобы изолировать систему.</p>
-                            </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Обновить системные пакеты до актуальных версий.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label commands">💻 Команды</div>
+                            <div class="cmd"><code>apt update</code><button class="cmd-copy" onclick="copyCmd(this,'apt update')">Copy</button></div>
+                            <div class="cmd"><code>apt upgrade</code><button class="cmd-copy" onclick="copyCmd(this,'apt upgrade')">Copy</button></div>
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>Все пакеты обновлены, нет ошибок в выводе.</p>
+                        </div>
+                        <div class="block-security">
+                            <div class="sub-label security">🔒 Безопасность</div>
+                            <p>Обновления закрывают уязвимости.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 2 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="2">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">2</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Настроить SSH</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Подключитесь к серверу безопасным способом</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- STEP 4 -->
+            <div class="step-card" data-step="4">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">4</div>
+                    <div class="step-info">
+                        <div class="step-title">Установить зависимости</div>
+                        <div class="step-subtitle">Git и Docker для работы OpenClaw</div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Подключиться к серверу безопасным способом.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>💻</span> Команды</div>
-                                <div class="space-y-2">
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">ssh-keygen</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'ssh-keygen')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">cat ~/.ssh/id_rsa.pub</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'cat ~/.ssh/id_rsa.pub')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">ssh root@SERVER_IP</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'ssh root@SERVER_IP')">Copy</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border)] rounded-xl p-8 text-center">
-                                <span class="text-4xl">📸</span>
-                                <p class="text-sm text-[var(--text-secondary)] mt-2">Пример подключения</p>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">Вы увидите приветствие сервера: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">Welcome to Ubuntu 22.04</code></p>
-                            </div>
-                            <div class="security-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--orange)]"><span>🔒</span> Безопасность</div>
-                                <p class="text-[var(--text-secondary)]">SSH-ключ защищает сервер от атак на пароль.</p>
-                            </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Установить необходимые инструменты.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label commands">💻 Команды</div>
+                            <div class="cmd"><code>apt install git docker.io</code><button class="cmd-copy" onclick="copyCmd(this,'apt install git docker.io')">Copy</button></div>
+                        </div>
+                        <div class="note-box" style="margin-top:16px">
+                            <ul class="simple-list">
+                                <li><span>📦</span> <strong>Git</strong> — скачивает код</li>
+                                <li><span>🐳</span> <strong>Docker</strong> — запускает OpenClaw</li>
+                            </ul>
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>Команды <code class="inline-code">git --version</code> и <code class="inline-code">docker --version</code> выводят версии.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 3 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="3">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">3</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Обновить систему</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Установите последние обновления безопасности</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- STEP 5 -->
+            <div class="step-card" data-step="5">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">5</div>
+                    <div class="step-info">
+                        <div class="step-title">Создать workspace</div>
+                        <div class="step-subtitle">Рабочая директория для агента</div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Обновить системные пакеты до актуальных версий.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>💻</span> Команды</div>
-                                <div class="space-y-2">
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">apt update</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'apt update')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">apt upgrade</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'apt upgrade')">Copy</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">Все пакеты обновлены, нет ошибок в выводе.</p>
-                            </div>
-                            <div class="security-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--orange)]"><span>🔒</span> Безопасность</div>
-                                <p class="text-[var(--text-secondary)]">Обновления закрывают уязвимости.</p>
-                            </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Создать изолированную рабочую директорию.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label commands">💻 Команды</div>
+                            <div class="cmd"><code>mkdir /home/openclaw</code><button class="cmd-copy" onclick="copyCmd(this,'mkdir /home/openclaw')">Copy</button></div>
+                            <div class="cmd"><code>mkdir /home/openclaw/workspace</code><button class="cmd-copy" onclick="copyCmd(this,'mkdir /home/openclaw/workspace')">Copy</button></div>
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <div class="cmd"><code>ls /home/openclaw/workspace</code><button class="cmd-copy" onclick="copyCmd(this,'ls /home/openclaw/workspace')">Copy</button></div>
+                        </div>
+                        <div class="block-security">
+                            <div class="sub-label security">🔒 Безопасность</div>
+                            <p>Агент будет работать только внутри workspace.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 4 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="4">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">4</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Установить зависимости</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Git и Docker для работы OpenClaw</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- STEP 6 -->
+            <div class="step-card" data-step="6">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">6</div>
+                    <div class="step-info">
+                        <div class="step-title">Установить OpenClaw</div>
+                        <div class="step-subtitle">Скачайте и запустите OpenClaw</div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Установить необходимые инструменты.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>💻</span> Команды</div>
-                                <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                    <code class="text-sm text-[var(--accent-light)]">apt install git docker.io</code>
-                                    <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'apt install git docker.io')">Copy</button>
-                                </div>
-                            </div>
-                            <div class="bg-[var(--bg-card)] rounded-xl p-4">
-                                <ul class="space-y-2 text-[var(--text-secondary)]">
-                                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">📦</span> <strong class="text-[var(--text-primary)]">Git</strong> — скачивает код</li>
-                                    <li class="flex items-start gap-3"><span class="text-[var(--accent-light)]">🐳</span> <strong class="text-[var(--text-primary)]">Docker</strong> — запускает OpenClaw</li>
-                                </ul>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">Команды <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">git --version</code> и <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">docker --version</code> выводят версии.</p>
-                            </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Клонировать репозиторий и запустить OpenClaw через Docker.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label commands">💻 Команды</div>
+                            <div class="cmd"><code>git clone https://github.com/openclaw/openclaw</code><button class="cmd-copy" onclick="copyCmd(this,'git clone https://github.com/openclaw/openclaw')">Copy</button></div>
+                            <div class="cmd"><code>cd openclaw</code><button class="cmd-copy" onclick="copyCmd(this,'cd openclaw')">Copy</button></div>
+                            <div class="cmd"><code>docker compose up</code><button class="cmd-copy" onclick="copyCmd(this,'docker compose up')">Copy</button></div>
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>В терминале появятся логи запуска OpenClaw. Контейнер запущен и работает.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 5 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="5">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">5</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Создать workspace</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Рабочая директория для агента</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- STEP 7 -->
+            <div class="step-card" data-step="7">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-num">7</div>
+                    <div class="step-info">
+                        <div class="step-title">Создать Telegram бота</div>
+                        <div class="step-subtitle">Настройте интерфейс управления через Telegram</div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Создать изолированную рабочую директорию.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>💻</span> Команды</div>
-                                <div class="space-y-2">
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">mkdir /home/openclaw</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'mkdir /home/openclaw')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">mkdir /home/openclaw/workspace</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'mkdir /home/openclaw/workspace')">Copy</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <div class="cmd-block rounded-lg p-3 flex items-center justify-between mt-2">
-                                    <code class="text-sm text-[var(--accent-light)]">ls /home/openclaw/workspace</code>
-                                    <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'ls /home/openclaw/workspace')">Copy</button>
-                                </div>
-                            </div>
-                            <div class="security-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--orange)]"><span>🔒</span> Безопасность</div>
-                                <p class="text-[var(--text-secondary)]">Агент будет работать только внутри workspace.</p>
-                            </div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="step-body">
+                    <div class="step-content">
+                        <div class="sub-block">
+                            <div class="sub-label goal">🧭 Цель</div>
+                            <p class="sub-text">Создать Telegram-бота для управления OpenClaw.</p>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-label actions">⚙️ Действия</div>
+                            <ol class="action-list">
+                                <li>Откройте <strong>Telegram</strong></li>
+                                <li>Найдите: <code class="inline-code">@BotFather</code></li>
+                                <li>Введите: <code class="inline-code">/newbot</code></li>
+                                <li>Следуйте инструкциям BotFather</li>
+                                <li>Скопируйте <strong>токен бота</strong></li>
+                            </ol>
+                        </div>
+                        <div class="screenshot">
+                            <div class="icon">📸</div>
+                            Диалог с BotFather
+                        </div>
+                        <div class="block-verify">
+                            <div class="sub-label verify">✅ Проверка результата</div>
+                            <p>BotFather пришлёт вам токен вида: <code class="inline-code">1234567890:ABCdefGhIjKlMnOpQrStUvWxYz</code></p>
+                        </div>
+                        <div class="block-security">
+                            <div class="sub-label security">🔒 Безопасность</div>
+                            <p>Никогда не делитесь токеном бота. Храните его в безопасном месте.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 6 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="6">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">6</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Установить OpenClaw</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Скачайте и запустите OpenClaw</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Клонировать репозиторий и запустить OpenClaw через Docker.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>💻</span> Команды</div>
-                                <div class="space-y-2">
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">git clone https://github.com/openclaw/openclaw</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'git clone https://github.com/openclaw/openclaw')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">cd openclaw</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'cd openclaw')">Copy</button>
-                                    </div>
-                                    <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                        <code class="text-sm text-[var(--accent-light)]">docker compose up</code>
-                                        <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'docker compose up')">Copy</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">В терминале появятся логи запуска OpenClaw. Контейнер запущен и работает.</p>
-                            </div>
-                        </div>
+        </div><!-- /steps-list -->
+    </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Усиление безопасности</h2>
+            <p>По умолчанию OpenClaw может быть уязвим к prompt injection. Добавим несколько уровней защиты.</p>
+        </div>
+
+        <div class="sec-cards">
+            <!-- Sandbox -->
+            <div class="sec-card">
+                <div class="sec-header" onclick="toggleSec(this)">
+                    <div class="sec-icon">🏖</div>
+                    <div class="sec-name">Sandbox</div>
+                    <div class="sec-desc">Изоляция выполнения</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="sec-body">
+                    <div class="sec-body-inner">
+                        <div class="cmd"><code>apt install bubblewrap</code><button class="cmd-copy" onclick="copyCmd(this,'apt install bubblewrap')">Copy</button></div>
+                        <p style="margin-top:12px">Bubblewrap запускает команды агента в изолированном namespace.</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 7 -->
-                <div class="glow-border rounded-2xl overflow-hidden step-block" data-step="7">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <div class="step-number">7</div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Создать Telegram бота</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Настройте интерфейс управления через Telegram</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <!-- File Restriction -->
+            <div class="sec-card">
+                <div class="sec-header" onclick="toggleSec(this)">
+                    <div class="sec-icon">📂</div>
+                    <div class="sec-name">Ограничение файлов</div>
+                    <div class="sec-desc">Контроль доступа</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="sec-body">
+                    <div class="sec-body-inner">
+                        <p>Агент может работать только внутри:</p>
+                        <div class="cmd" style="margin-top:8px"><code>/home/openclaw/workspace</code></div>
                     </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-5">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2 font-semibold"><span>🧭</span> Цель</div>
-                                <p class="text-[var(--text-secondary)]">Создать Telegram-бота для управления OpenClaw.</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-3 font-semibold"><span>⚙️</span> Действия</div>
-                                <ol class="space-y-3 text-[var(--text-secondary)]">
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">1</span>
-                                        <span>Откройте <strong class="text-[var(--text-primary)]">Telegram</strong></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">2</span>
-                                        <span>Найдите: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">@BotFather</code></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">3</span>
-                                        <span>Введите: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">/newbot</code></span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">4</span>
-                                        <span>Следуйте инструкциям BotFather</span>
-                                    </li>
-                                    <li class="flex items-start gap-3">
-                                        <span class="step-number text-xs !min-w-[28px] !h-[28px] !rounded-lg">5</span>
-                                        <span>Скопируйте <strong class="text-[var(--text-primary)]">токен бота</strong></span>
-                                    </li>
-                                </ol>
-                            </div>
-                            <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border)] rounded-xl p-8 text-center">
-                                <span class="text-4xl">📸</span>
-                                <p class="text-sm text-[var(--text-secondary)] mt-2">Диалог с BotFather</p>
-                            </div>
-                            <div class="verify-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--green)]"><span>✅</span> Проверка результата</div>
-                                <p class="text-[var(--text-secondary)]">BotFather пришлёт вам токен вида: <code class="bg-[var(--bg-primary)] px-2 py-0.5 rounded text-sm">1234567890:ABCdefGhIjKlMnOpQrStUvWxYz</code></p>
-                            </div>
-                            <div class="security-block rounded-xl p-4">
-                                <div class="flex items-center gap-2 mb-2 font-semibold text-[var(--orange)]"><span>🔒</span> Безопасность</div>
-                                <p class="text-[var(--text-secondary)]">Никогда не делитесь токеном бота. Храните его в безопасном месте.</p>
-                            </div>
-                        </div>
+                </div>
+            </div>
+
+            <!-- Vault -->
+            <div class="sec-card">
+                <div class="sec-header" onclick="toggleSec(this)">
+                    <div class="sec-icon">🔐</div>
+                    <div class="sec-name">Vault для секретов</div>
+                    <div class="sec-desc">Шифрование данных</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="sec-body">
+                    <div class="sec-body-inner">
+                        <div class="cmd"><code>apt install sops age</code><button class="cmd-copy" onclick="copyCmd(this,'apt install sops age')">Copy</button></div>
+                        <p style="margin-top:12px">Секреты будут храниться зашифрованными.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DLP -->
+            <div class="sec-card">
+                <div class="sec-header" onclick="toggleSec(this)">
+                    <div class="sec-icon">🚫</div>
+                    <div class="sec-name">DLP — Data Loss Prevention</div>
+                    <div class="sec-desc">Блокировка утечки</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="sec-body">
+                    <div class="sec-body-inner">
+                        <p style="margin-bottom:8px">Система блокирует отправку:</p>
+                        <ul class="simple-list">
+                            <li><span style="color:var(--red-500)">✕</span> API ключей</li>
+                            <li><span style="color:var(--red-500)">✕</span> .env файлов</li>
+                            <li><span style="color:var(--red-500)">✕</span> секретов</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <div class="section-divider max-w-4xl mx-auto"></div>
-
-    <!-- SECURITY HARDENING -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">🛡 Усиление безопасности</h2>
-                <p class="text-[var(--text-secondary)] max-w-xl mx-auto">По умолчанию OpenClaw может быть уязвим к prompt injection. Поэтому мы добавим несколько уровней защиты.</p>
+        <!-- Security Diagram -->
+        <div style="margin-top:48px">
+            <div class="section-header"><h2>Схема безопасности</h2></div>
+            <div class="diagram">
+                <div class="diagram-box" style="width:220px">
+                    <div class="icon">🧠</div>
+                    <div class="label">Prompt Layer</div>
+                    <div style="font-size:12px;color:var(--gray-400)">Фильтрация промптов</div>
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box" style="width:220px">
+                    <div class="icon">⚙️</div>
+                    <div class="label">Tool Policy</div>
+                    <div style="font-size:12px;color:var(--gray-400)">Контроль инструментов</div>
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box" style="width:220px">
+                    <div class="icon">🏖</div>
+                    <div class="label">Sandbox</div>
+                    <div style="font-size:12px;color:var(--gray-400)">Изоляция выполнения</div>
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box" style="width:220px">
+                    <div class="icon">🔒</div>
+                    <div class="label">Infrastructure Security</div>
+                    <div style="font-size:12px;color:var(--gray-400)">Защита инфраструктуры</div>
+                </div>
             </div>
+            <p style="text-align:center;color:var(--gray-500);font-size:14px">Большая часть защиты строится на инфраструктуре.</p>
+        </div>
+    </div>
+</section>
 
-            <div class="space-y-4">
-                <!-- Sandbox -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-2xl">🏖</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Sandbox</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Изоляция выполнения команд</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-4">
-                            <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                <code class="text-sm text-[var(--accent-light)]">apt install bubblewrap</code>
-                                <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'apt install bubblewrap')">Copy</button>
-                            </div>
-                            <p class="text-[var(--text-secondary)]">Bubblewrap запускает команды агента в изолированном namespace.</p>
-                        </div>
-                    </div>
+<!-- ============ TROUBLESHOOTING ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Troubleshooting</h2>
+            <p>Решения частых проблем</p>
+        </div>
+
+        <div class="trouble-list">
+            <div class="trouble-card">
+                <div class="trouble-header" onclick="toggleTrouble(this)">
+                    <span style="color:var(--red-500)">●</span>
+                    <div class="trouble-title">Не подключается сервер</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
-
-                <!-- File Restriction -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-2xl">📂</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Ограничение файлов</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Контроль доступа к файловой системе</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6">
-                            <p class="text-[var(--text-secondary)]">Агент может работать только внутри:</p>
-                            <div class="cmd-block rounded-lg p-3 mt-3">
-                                <code class="text-sm text-[var(--accent-light)]">/home/openclaw/workspace</code>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vault -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-2xl">🔐</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">Vault для секретов</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Шифрование секретных данных</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6 space-y-4">
-                            <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                <code class="text-sm text-[var(--accent-light)]">apt install sops age</code>
-                                <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'apt install sops age')">Copy</button>
-                            </div>
-                            <p class="text-[var(--text-secondary)]">Секреты будут храниться зашифрованными.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DLP -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-2xl">🚫</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-lg">DLP — Data Loss Prevention</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">Блокировка утечки секретов</p>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6">
-                            <p class="text-[var(--text-secondary)] mb-3">Система блокирует отправку:</p>
-                            <ul class="space-y-2 text-[var(--text-secondary)]">
-                                <li class="flex items-start gap-3"><span class="text-[var(--red)]">✕</span> API ключей</li>
-                                <li class="flex items-start gap-3"><span class="text-[var(--red)]">✕</span> .env файлов</li>
-                                <li class="flex items-start gap-3"><span class="text-[var(--red)]">✕</span> секретов</li>
+                <div class="trouble-body">
+                    <div class="trouble-body-inner">
+                        <div class="block-trouble">
+                            <p style="margin-bottom:8px">Проверьте:</p>
+                            <ul class="simple-list">
+                                <li><span>→</span> IP адрес</li>
+                                <li><span>→</span> SSH ключ</li>
+                                <li><span>→</span> Порт 22</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Security Diagram -->
-            <div class="mt-12">
-                <h3 class="text-xl font-bold mb-6 text-center">Схема безопасности</h3>
-                <div class="flex flex-col items-center gap-0">
-                    <div class="diagram-box rounded-xl px-8 py-4 text-center w-64">
-                        <div class="text-xl mb-1">🧠</div>
-                        <div class="font-bold">Prompt Layer</div>
-                        <div class="text-xs text-[var(--text-secondary)]">Фильтрация промптов</div>
-                    </div>
-                    <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                    <div class="diagram-box rounded-xl px-8 py-4 text-center w-64">
-                        <div class="text-xl mb-1">⚙️</div>
-                        <div class="font-bold">Tool Policy</div>
-                        <div class="text-xs text-[var(--text-secondary)]">Контроль инструментов</div>
-                    </div>
-                    <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                    <div class="diagram-box rounded-xl px-8 py-4 text-center w-64">
-                        <div class="text-xl mb-1">🏖</div>
-                        <div class="font-bold">Sandbox</div>
-                        <div class="text-xs text-[var(--text-secondary)]">Изоляция выполнения</div>
-                    </div>
-                    <div class="diagram-arrow text-3xl leading-none py-1">↓</div>
-                    <div class="diagram-box rounded-xl px-8 py-4 text-center w-64">
-                        <div class="text-xl mb-1">🔒</div>
-                        <div class="font-bold">Infrastructure Security</div>
-                        <div class="text-xs text-[var(--text-secondary)]">Защита инфраструктуры</div>
+            <div class="trouble-card">
+                <div class="trouble-header" onclick="toggleTrouble(this)">
+                    <span style="color:var(--red-500)">●</span>
+                    <div class="trouble-title">OpenClaw не отвечает</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="trouble-body">
+                    <div class="trouble-body-inner">
+                        <div class="block-trouble">
+                            <p style="margin-bottom:8px">Проверьте статус контейнеров:</p>
+                            <div class="cmd"><code>docker ps</code><button class="cmd-copy" onclick="copyCmd(this,'docker ps')">Copy</button></div>
+                        </div>
                     </div>
                 </div>
-                <p class="text-center text-[var(--text-secondary)] mt-6">Большая часть защиты строится на инфраструктуре.</p>
             </div>
-        </div>
-    </section>
-
-    <div class="section-divider max-w-4xl mx-auto"></div>
-
-    <!-- TROUBLESHOOTING -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">🔧 Troubleshooting</h2>
-                <p class="text-[var(--text-secondary)]">Решения частых проблем</p>
-            </div>
-
-            <div class="space-y-4">
-                <!-- Issue 1 -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-xl">❌</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold">Не подключается сервер</h3>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6">
-                            <div class="troubleshoot-block rounded-xl p-4">
-                                <p class="text-[var(--text-secondary)] mb-3">Проверьте:</p>
-                                <ul class="space-y-2 text-[var(--text-secondary)]">
-                                    <li class="flex items-start gap-3"><span class="text-[var(--red)]">→</span> IP адрес</li>
-                                    <li class="flex items-start gap-3"><span class="text-[var(--red)]">→</span> SSH ключ</li>
-                                    <li class="flex items-start gap-3"><span class="text-[var(--red)]">→</span> Порт 22</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+            <div class="trouble-card">
+                <div class="trouble-header" onclick="toggleTrouble(this)">
+                    <span style="color:var(--red-500)">●</span>
+                    <div class="trouble-title">Telegram бот не отвечает</div>
+                    <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--gray-400);transition:transform 0.25s"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
-
-                <!-- Issue 2 -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-xl">❌</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold">OpenClaw не отвечает</h3>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6">
-                            <div class="troubleshoot-block rounded-xl p-4">
-                                <p class="text-[var(--text-secondary)] mb-3">Проверьте статус контейнеров:</p>
-                                <div class="cmd-block rounded-lg p-3 flex items-center justify-between">
-                                    <code class="text-sm text-[var(--accent-light)]">docker ps</code>
-                                    <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'docker ps')">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Issue 3 -->
-                <div class="glow-border rounded-2xl overflow-hidden">
-                    <div class="accordion-header flex items-center gap-4 p-5 bg-[var(--bg-card)]" onclick="toggleAccordion(this)">
-                        <span class="text-xl">❌</span>
-                        <div class="flex-1">
-                            <h3 class="font-bold">Telegram бот не отвечает</h3>
-                        </div>
-                        <svg class="accordion-arrow w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content bg-[var(--bg-secondary)]">
-                        <div class="p-6">
-                            <div class="troubleshoot-block rounded-xl p-4">
-                                <p class="text-[var(--text-secondary)]">Проверьте токен бота. Убедитесь, что он правильно скопирован в конфигурацию OpenClaw.</p>
-                            </div>
+                <div class="trouble-body">
+                    <div class="trouble-body-inner">
+                        <div class="block-trouble">
+                            <p>Проверьте токен бота. Убедитесь, что он правильно скопирован в конфигурацию OpenClaw.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div class="section-divider max-w-4xl mx-auto"></div>
+<!-- ============ FINAL TEST ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header"><h2>Финальный тест</h2></div>
 
-    <!-- FINAL TEST -->
-    <section class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">🧪 Финальный тест</h2>
+        <div class="final-test">
+            <p>Напишите боту в Telegram:</p>
+            <div class="final-cmd">
+                <code>hello</code>
+                <button class="cmd-copy" onclick="copyCmd(this,'hello')">Copy</button>
             </div>
+            <p>Если бот отвечает — <strong style="color:var(--green-600)">установка завершена</strong> ✅</p>
+        </div>
+    </div>
+</section>
 
-            <div class="bg-[var(--bg-card)] glow-border rounded-2xl p-8 text-center">
-                <p class="text-[var(--text-secondary)] text-lg mb-4">Напишите боту в Telegram:</p>
-                <div class="cmd-block rounded-xl p-4 inline-flex items-center gap-4 mx-auto">
-                    <code class="text-xl text-[var(--accent-light)]">hello</code>
-                    <button class="copy-btn text-xs px-3 py-1 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] cursor-pointer" onclick="copyCmd(this, 'hello')">Copy</button>
+<!-- ============ COMPLETION ============ -->
+<section class="section" id="completion">
+    <div class="container">
+        <div class="completion">
+            <div style="font-size:48px;margin-bottom:12px">🎉</div>
+            <h2>Установка завершена</h2>
+            <p>Теперь у вас есть:</p>
+            <div class="completion-grid">
+                <div class="completion-item">
+                    <div class="ci-icon">🤖</div>
+                    <div class="ci-text">OpenClaw агент</div>
                 </div>
-                <p class="text-[var(--text-secondary)] mt-6">Если бот отвечает — <strong class="text-[var(--green)]">установка завершена</strong> ✅</p>
-            </div>
-        </div>
-    </section>
-
-    <div class="section-divider max-w-4xl mx-auto"></div>
-
-    <!-- COMPLETION -->
-    <section class="py-20" id="completion">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="completion-block rounded-3xl p-10 text-center">
-                <div class="text-6xl mb-6">🎉</div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">Установка завершена</h2>
-                <p class="text-[var(--text-secondary)] text-lg mb-8">Теперь у вас есть:</p>
-
-                <div class="grid md:grid-cols-3 gap-4 mb-10 max-w-2xl mx-auto">
-                    <div class="bg-[var(--bg-card)] rounded-xl p-5 glow-border">
-                        <div class="text-3xl mb-2">🤖</div>
-                        <div class="font-semibold text-sm">OpenClaw агент</div>
-                    </div>
-                    <div class="bg-[var(--bg-card)] rounded-xl p-5 glow-border">
-                        <div class="text-3xl mb-2">💬</div>
-                        <div class="font-semibold text-sm">Telegram интерфейс</div>
-                    </div>
-                    <div class="bg-[var(--bg-card)] rounded-xl p-5 glow-border">
-                        <div class="text-3xl mb-2">🛡</div>
-                        <div class="font-semibold text-sm">Защищённая инфраструктура</div>
-                    </div>
+                <div class="completion-item">
+                    <div class="ci-icon">💬</div>
+                    <div class="ci-text">Telegram интерфейс</div>
                 </div>
-
-                <p class="text-[var(--accent-light)] text-lg font-medium">Вы можете начать автоматизировать задачи. 🚀</p>
+                <div class="completion-item">
+                    <div class="ci-icon">🛡</div>
+                    <div class="ci-text">Защищённая инфраструктура</div>
+                </div>
             </div>
+            <p style="font-weight:600;color:var(--green-700)">Вы можете начать автоматизировать задачи. 🚀</p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="py-10 border-t border-[var(--border)]">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <p class="text-[var(--text-secondary)] text-sm">gconf · OpenClaw Setup Lab</p>
-        </div>
-    </footer>
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">gconf · OpenClaw Setup Lab</div>
+</footer>
 
-    <script>
-        // ==================== ACCORDION ====================
-        function toggleAccordion(header) {
-            const content = header.nextElementSibling;
-            const arrow = header.querySelector('.accordion-arrow');
-            const isOpen = content.classList.contains('open');
+<script>
+    // ===== ACCORDION (Steps) =====
+    function toggleStep(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.step-arrow');
+        body.classList.toggle('open');
+        arrow.classList.toggle('open');
+    }
 
-            content.classList.toggle('open');
-            arrow.classList.toggle('rotated');
-        }
+    // ===== ACCORDION (Security) =====
+    function toggleSec(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.step-arrow');
+        body.classList.toggle('open');
+        arrow.classList.toggle('open');
+    }
 
-        // ==================== COPY COMMAND ====================
-        function copyCmd(btn, text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const original = btn.textContent;
-                btn.textContent = '✓ Copied';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = original;
-                    btn.classList.remove('copied');
-                }, 2000);
-            }).catch(() => {
-                // Fallback
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                const original = btn.textContent;
-                btn.textContent = '✓ Copied';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = original;
-                    btn.classList.remove('copied');
-                }, 2000);
-            });
-        }
+    // ===== ACCORDION (Troubleshoot) =====
+    function toggleTrouble(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.step-arrow');
+        body.classList.toggle('open');
+        arrow.classList.toggle('open');
+    }
 
-        // ==================== PROGRESS ====================
-        function updateProgress() {
-            const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-            const total = checkboxes.length;
-            let checked = 0;
+    // ===== COPY =====
+    function copyCmd(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showCopied(btn);
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopied(btn);
+        });
+    }
+    function showCopied(btn) {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = orig;
+            btn.classList.remove('copied');
+        }, 1500);
+    }
 
-            checkboxes.forEach((cb, index) => {
-                const label = cb.closest('.check-item');
-                if (cb.checked) {
-                    checked++;
-                    label.classList.add('checked');
-                } else {
-                    label.classList.remove('checked');
-                }
-            });
-
-            const percent = Math.round((checked / total) * 100);
-            document.getElementById('progressFill').style.width = percent + '%';
-            document.getElementById('progressPercent').textContent = percent + '%';
-
-            // Floating progress
-            document.getElementById('floatingProgressFill').style.width = percent + '%';
-            document.getElementById('floatingProgressText').textContent = percent + '%';
-
-            // Update step blocks
-            const stepBlocks = document.querySelectorAll('.step-block');
-            checkboxes.forEach((cb, index) => {
-                if (index < stepBlocks.length) {
-                    if (cb.checked) {
-                        stepBlocks[index].classList.add('step-completed');
-                    } else {
-                        stepBlocks[index].classList.remove('step-completed');
-                    }
-                }
-            });
-
-            // Save progress
-            saveProgress();
-
-            // Confetti on completion
-            if (percent === 100) {
-                launchConfetti();
-            }
-        }
-
-        // ==================== SAVE/LOAD PROGRESS ====================
-        function saveProgress() {
-            const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-            const state = [];
-            checkboxes.forEach(cb => state.push(cb.checked));
-            localStorage.setItem('openclaw_progress', JSON.stringify(state));
-        }
-
-        function loadProgress() {
-            const saved = localStorage.getItem('openclaw_progress');
-            if (saved) {
-                const state = JSON.parse(saved);
-                const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-                checkboxes.forEach((cb, index) => {
-                    if (state[index]) {
-                        cb.checked = true;
-                    }
-                });
-                updateProgress();
-            }
-        }
-
-        // ==================== FLOATING PROGRESS BAR ====================
-        function handleScroll() {
-            const lab = document.getElementById('lab');
-            const floating = document.getElementById('floatingProgress');
-
-            if (lab) {
-                const rect = lab.getBoundingClientRect();
-                if (rect.top < -100) {
-                    floating.style.transform = 'translateY(0)';
-                    floating.style.opacity = '1';
-                } else {
-                    floating.style.transform = 'translateY(-100%)';
-                    floating.style.opacity = '0';
-                }
-            }
-        }
-
-        window.addEventListener('scroll', handleScroll);
-
-        // ==================== CONFETTI ====================
-        function launchConfetti() {
-            const colors = ['#6c5ce7', '#a29bfe', '#00cec9', '#fdcb6e', '#e17055', '#fff'];
-            for (let i = 0; i < 60; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.classList.add('confetti');
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.top = '-20px';
-                    confetti.style.width = (Math.random() * 10 + 6) + 'px';
-                    confetti.style.height = (Math.random() * 10 + 6) + 'px';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    confetti.style.animationDelay = (Math.random() * 0.5) + 's';
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 5000);
-                }, i * 30);
-            }
-        }
-
-        // ==================== INIT ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProgress();
-
-            // Open first step by default
-            const firstHeader = document.querySelector('.step-block .accordion-header');
-            if (firstHeader) {
-                toggleAccordion(firstHeader);
+    // ===== PROGRESS =====
+    function updateProgress() {
+        const cbs = document.querySelectorAll('#checklist input[type="checkbox"]');
+        let checked = 0;
+        cbs.forEach(cb => {
+            const label = cb.closest('.check-item');
+            if (cb.checked) {
+                checked++;
+                label.classList.add('done');
+            } else {
+                label.classList.remove('done');
             }
         });
-    </script>
+
+        const pct = Math.round((checked / cbs.length) * 100);
+
+        document.getElementById('mainFill').style.width = pct + '%';
+        document.getElementById('mainPct').textContent = pct + '%';
+        document.getElementById('floatingFill').style.width = pct + '%';
+        document.getElementById('floatingPct').textContent = pct + '%';
+
+        // Mark step cards completed
+        const cards = document.querySelectorAll('.step-card');
+        cbs.forEach((cb, i) => {
+            if (i < cards.length) {
+                cards[i].classList.toggle('completed', cb.checked);
+            }
+        });
+
+        saveProgress();
+        if (pct === 100) launchConfetti();
+    }
+
+    // ===== SAVE/LOAD =====
+    function saveProgress() {
+        const cbs = document.querySelectorAll('#checklist input[type="checkbox"]');
+        const state = [];
+        cbs.forEach(cb => state.push(cb.checked));
+        localStorage.setItem('openclaw_progress', JSON.stringify(state));
+    }
+    function loadProgress() {
+        const saved = localStorage.getItem('openclaw_progress');
+        if (saved) {
+            const state = JSON.parse(saved);
+            const cbs = document.querySelectorAll('#checklist input[type="checkbox"]');
+            cbs.forEach((cb, i) => { if (state[i]) cb.checked = true; });
+            updateProgress();
+        }
+    }
+
+    // ===== FLOATING BAR =====
+    window.addEventListener('scroll', () => {
+        const lab = document.getElementById('lab');
+        const bar = document.getElementById('floatingBar');
+        if (lab) {
+            const r = lab.getBoundingClientRect();
+            bar.classList.toggle('visible', r.top < -100);
+        }
+    });
+
+    // ===== CONFETTI =====
+    function launchConfetti() {
+        const colors = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#ec4899'];
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.width = (Math.random() * 8 + 5) + 'px';
+                c.style.height = (Math.random() * 8 + 5) + 'px';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 5000);
+            }, i * 30);
+        }
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProgress();
+        // Open first step
+        const first = document.querySelector('.step-card .step-header');
+        if (first) toggleStep(first);
+    });
+</script>
 
 </body>
 </html>
